@@ -10,7 +10,7 @@ Text grid file format:
 %hd %hd\n
 matrix of size row x col
 */
-int writeOutput1(char** outfile, short** g, short row, short col){
+int writeOutput1(char* outfile, Graph* graph, short row, short col){
     FILE* fp = fopen(outfile, "w");
     if(fp == NULL){
         fprintf(stderr, "Error opening output file 1\n");
@@ -19,7 +19,7 @@ int writeOutput1(char** outfile, short** g, short row, short col){
     fprintf(fp, "%hd %hd\n", row, col);
     for(int i = 0; i < row; i++){
         for(int j = 0; j < col; j++){
-            fprintf(fp, "%hd", g[i][j]);
+            fprintf(fp, "%hd", graph->g[i][j].time);
             if(j != col - 1) fprintf(fp, " ");
         }
         fprintf(fp, "\n");
@@ -34,26 +34,27 @@ Fastest times file format:
 first store numbers of entrys -> number of columns as short
 then store the fastest times for each entry to exit at the bottom of the matrix -> as int
 */
-int writeOutput2(char** outfile, Node** g, short col){
+Path* writeOutput2(char* outfile, Graph* graph, short row, short col){
     FILE* fp = fopen(outfile, "wb");
     if(fp == NULL){
         fprintf(stderr, "Error opening output file 2\n");
-        return -1;
+        return NULL;
     }
 
     fwrite(&col, sizeof(short), 1, fp);
-    int fastest_idx = 0;
     int fastest_time = 0;
+    Path* fastestPath = NULL;
     for(int i = 0; i < col; i++){
-        Path* p = shortestPath(g, g[0][i]);
-        if(p->time < fastest_time){
-            fastest_time = p->time;
-            fastest_idx = i;
-        }
+        Path* p = shortestPath(graph, row, col, i);
         fwrite(&p->time, sizeof(int), 1, fp);
+        if(p->time < fastest_time){
+            fastestPath = p;
+        } else {
+            free(p);
+        }
     }
 
-    return fastest_idx;
+    return fastestPath;
 }
 
 /*
@@ -63,7 +64,7 @@ First store the fastest time -> int
 then store the number of locations that constitute the path -> int
 finally stor the (row,col) for each location in the path -> (short, short)
 */
-int writeOutput3(char** outfile, Path* p, int fastest_idx){
+int writeOutput3(char* outfile, Path* p){
     FILE* fp = fopen(outfile, "wb");
     if(fp == NULL){
         fprintf(stderr, "Error opening output file 3\n");
@@ -72,11 +73,10 @@ int writeOutput3(char** outfile, Path* p, int fastest_idx){
 
     fwrite(&p->time, sizeof(int), 1, fp);
     fwrite(&p->size, sizeof(int), 1, fp);
-    Node* temp = p->head;
-
+    PathNode* temp = p->front;
     while(temp != NULL){
-        fwrite(&temp->row, sizeof(short), 1, fp);
-        fwrite(&temp->col, sizeof(short), 1, fp);
+        fwrite(&temp->node->row, sizeof(short), 1, fp);
+        fwrite(&temp->node->col, sizeof(short), 1, fp);
         temp = temp->next;
     }
 

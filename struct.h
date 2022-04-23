@@ -1,29 +1,39 @@
 #ifndef STRUCH_H
 #define STRUCH_H
 
-typedef struct Node{
-    int row;
-    int col;
-    int time;
-    struct Node *next;
-} Node;
+typedef struct GraphNode{
+    int priority;
+    short time;
+    short row;
+    short col;
+} GraphNode;
+
+typedef struct Graph {
+    short row;
+    short col;
+    GraphNode** g;
+} Graph;
+
+typedef struct PathNode{
+    GraphNode* node;
+    struct PathNode* next;
+} PathNode;
 
 typedef struct Path{
     int time;
     int size;
-    Node *head;
+    PathNode* front;
+    PathNode* rear;
 } Path;
 
 typedef struct PQ {
-    short row;
-    short col;
+    GraphNode* node;
     int time;
-    short pred_row;
-    short pred_col;
+    GraphNode* pred;
 } PQ;
 
-Node* buildNode(short, short, short);
+
 Path* buildPath();
-void destroyList(Node*);
+PathNode* buildPathNode(GraphNode*);
 
 #endif

@@ -2,31 +2,22 @@
 #include <stdlib.h>
 #include "struct.h"
 
-Node* buildNode(short row, short col, short time){
-    Node* nd = (Node*)malloc(sizeof(Node));
-
-    nd->row = row;
-    nd->col = col;
-    nd->time = time;
-    nd->next = NULL;
-
-    return nd;
-}
-
 Path* buildPath(){
     Path* path = (Path*)malloc(sizeof(Path));
 
     path->time = 0;
     path->size = 0;
-    path->head = NULL;
+    path->front = NULL;
+    path->rear = NULL;
 
     return path;
 }
 
-void destroyList(Node* head){
-    while(head!= NULL){
-        Node* tmp = head;
-        head = head->next;
-        free(tmp);
-    }
+PathNode* buildPathNode(GraphNode* nd){
+    PathNode* pnode = malloc(sizeof(PathNode));
+
+    pnode->node = nd;
+    pnode->next = NULL;
+
+    return pnode;
 }
