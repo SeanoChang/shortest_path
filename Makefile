@@ -2,8 +2,8 @@ CFLAGS = -std=c99 -g -Wall -Wshadow -Wvla -pedantic -Werror
 GCCALL = gcc -O3 -std=c99 -Wall -Wshadow -Wvla -pedantic
 GCC = gcc $(CFLAGS)
 EXEC = pa5
-OBJS =  pa5.o 
-HOBJS = 
+OBJS =  pa5.o build_graph.o struct.o write_output.o traverse_graph.o
+HOBJS = build_graph.h struct.h write_output.h traverse_graph.h
 VALGRIND = valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --verbose
 
 $(EXEC): $(OBJS) $(HOBJS)

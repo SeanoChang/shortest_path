@@ -13,6 +13,16 @@ Node* buildNode(short row, short col, short time){
     return nd;
 }
 
+Path* buildPath(){
+    Path* path = (Path*)malloc(sizeof(Path));
+
+    path->time = 0;
+    path->size = 0;
+    path->head = NULL;
+
+    return path;
+}
+
 void destroyList(Node* head){
     while(head!= NULL){
         Node* tmp = head;
