@@ -12,8 +12,9 @@ matrix of size row x col
 */
 int writeOutput1(char* outfile, Graph* graph, short row, short col){
     FILE* fp = fopen(outfile, "w");
+    printf("hello\n");
     if(fp == NULL){
-        fprintf(stderr, "Error opening output file 1\n");
+        fprintf(stderr, "write_output.c Error opening output file 1\n");
         return EXIT_FAILURE;
     }
     fprintf(fp, "%hd %hd\n", row, col);
@@ -24,6 +25,7 @@ int writeOutput1(char* outfile, Graph* graph, short row, short col){
         }
         fprintf(fp, "\n");
     }
+    
     fclose(fp);
     return EXIT_SUCCESS;
 }
@@ -37,7 +39,7 @@ then store the fastest times for each entry to exit at the bottom of the matrix 
 Path* writeOutput2(char* outfile, Graph* graph, short row, short col){
     FILE* fp = fopen(outfile, "wb");
     if(fp == NULL){
-        fprintf(stderr, "Error opening output file 2\n");
+        fprintf(stderr, "write_output.c Error opening output file 2\n");
         return NULL;
     }
 
@@ -67,7 +69,7 @@ finally stor the (row,col) for each location in the path -> (short, short)
 int writeOutput3(char* outfile, Path* p){
     FILE* fp = fopen(outfile, "wb");
     if(fp == NULL){
-        fprintf(stderr, "Error opening output file 3\n");
+        fprintf(stderr, "write_output.c Error opening output file 3\n");
         return EXIT_FAILURE;
     }
 

@@ -7,7 +7,7 @@
 Graph* readGraph(char* infile, short* row, short* col){
     FILE* fp = fopen(infile, "rb");
     if(fp == NULL){
-        fprintf(stderr, "Error opening input file\n");
+        fprintf(stderr, "build_graph.c Error opening input file\n");
         fclose(fp);
         return NULL;
     }
