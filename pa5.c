@@ -10,9 +10,9 @@ int main(int argc, char** argv){
         return EXIT_FAILURE;
     }
 
-    short row;
-    short col;
-    Graph* graph = readGraph(argv[1], &row, &col);
+    Graph* graph = readGraph(argv[1]);
+    short row = graph->row;
+    short col = graph->col;
 
     if(writeOutput1(argv[2], graph, row, col)){
         fprintf(stderr, "pa5.c Error writing output file 1\n");

@@ -12,11 +12,11 @@ matrix of size row x col
 */
 int writeOutput1(char* outfile, Graph* graph, short row, short col){
     FILE* fp = fopen(outfile, "w");
-    printf("hello\n");
     if(fp == NULL){
         fprintf(stderr, "write_output.c Error opening output file 1\n");
         return EXIT_FAILURE;
     }
+
     fprintf(fp, "%hd %hd\n", row, col);
     for(int i = 0; i < row; i++){
         for(int j = 0; j < col; j++){
