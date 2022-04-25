@@ -9,24 +9,32 @@ VALGRIND = valgrind --tool=memcheck --leak-check=full --show-leak-kinds=all --ve
 $(EXEC): $(OBJS) $(HOBJS)
 	$(GCC) $(OBJS) -o $(EXEC)
 
+45: $(EXEC)
+	mkdir outputs
+	./$(EXEC) examples/4_5.b outputs/4_5.t outputs/4_5.f outputs/4_5.p
+	diff examples/4_5.t outputs/4_5.t
+	diff examples/4_5.f outputs/4_5.f
+
+77: $(EXEC)
+	mkdir outputs
+	./$(EXEC) examples/7_7.b outputs/7_7.t outputs/7_7.f outputs/7_7.p
+	diff examples/7_7.t outputs/7_7.t
+	diff examples/7_7.f outputs/7_7.f
+
 test: $(EXEC)
 	mkdir outputs
 	./$(EXEC) examples/4_5.b outputs/4_5.t outputs/4_5.f outputs/4_5.p
 	diff examples/4_5.t outputs/4_5.t
 	diff examples/4_5.f outputs/4_5.f
-	diff examples/4_5.p outputs/4_5.p 
 	./$(EXEC) examples/5_4.b outputs/5_4.t outputs/5_4.f outputs/5_4.p
 	diff examples/5_4.t outputs/5_4.t
 	diff examples/5_4.f outputs/5_4.f
-	diff examples/5_4.p outputs/5_4.p
 	./$(EXEC) examples/5_5.b outputs/5_5.t outputs/5_5.f outputs/5_5.p
 	diff examples/5_5.t outputs/5_5.t
 	diff examples/5_5.f outputs/5_5.f
-	diff examples/5_5.p outputs/5_5.p
 	./$(EXEC) examples/7_7.b outputs/7_7.t outputs/7_7.f outputs/7_7.p
 	diff examples/7_7.t outputs/7_7.t
 	diff examples/7_7.f outputs/7_7.f
-	diff examples/7_7.p outputs/7_7.p
 
 memory: $(EXEC)
 	mkdir moutputs

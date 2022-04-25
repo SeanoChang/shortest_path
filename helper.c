@@ -9,8 +9,19 @@ int reachedBottom(Path* path, short row) {
     return 0;
 }
 
-int shouldHeapify(PQ l, PQ r) {
+int shouldHeapify(PQ l, PQ r, PQ i) {
+    // if both children are -1 then don't heapify
     if(l.time == -1 && r.time == -1) return 0;
+    if(i.time != -1){
+        if(l.time != -1 && r.time != -1) {
+            if(l.time < i.time || r.time < i.time) return 1;
+        }  else if(l.time != -1) {
+            if(l.time < i.time) return 1;
+        }  else if(r.time != -1) {
+            if(r.time < i.time) return 1;
+        }
+        return 0;
+    }
     return 1;
 }
 

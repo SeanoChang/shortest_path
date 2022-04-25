@@ -48,7 +48,6 @@ Path* writeOutput2(char* outfile, Graph* graph, short row, short col){
     Path* fastestPath = NULL;
     for(int i = 0; i < col; i++){
         Path* p = shortestPath(graph, row, col, i);
-        printf("hello\n");
         fwrite(&p->time, sizeof(int), 1, fp);
         if(fastest_time == -1 || fastest_time > p->time){
             fastestPath = p;
