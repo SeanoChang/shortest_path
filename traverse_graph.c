@@ -37,6 +37,7 @@ Path* shortestPath(Graph* graph, short row, short col, int start) {
         temp = temp->next;
     }
     path->time += temp->node->time;
+    path->size++;
 
     free(pq);
     return path;
