@@ -3,12 +3,6 @@
 #include "struct.h"
 #include "helper.h"
 
-int reachedBottom(Path* path, short row) {
-    printf("rear at node (%hd,%hd)\n", path->rear->node->row, path->rear->node->col);
-    if(path->rear->node->row >= row-1) return 1;
-    return 0;
-}
-
 int shouldHeapify(PQ l, PQ r, PQ i) {
     // if both children are -1 then don't heapify
     if(l.time == -1 && r.time == -1) return 0;

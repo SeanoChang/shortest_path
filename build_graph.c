@@ -32,7 +32,6 @@ Graph* readGraph(char* infile){
             graph->g[i][j].col = j;
         }
     }
-    printf("\n");
     fclose(fp);
     return graph;
 }

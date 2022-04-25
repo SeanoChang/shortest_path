@@ -22,6 +22,15 @@ PathNode* buildPathNode(GraphNode* nd){
     return pnode;
 }
 
+void destroyPaths(Path** paths, short col, int fastest_idx) {
+    for(int i = 0; i < col; i++){
+        if(i != fastest_idx){
+            destroyPath(paths[i]);
+        }
+    }
+    free(paths);
+}
+
 void destroyPath(Path* p) {
     PathNode* cur = p->front;
     while(cur != NULL) {
