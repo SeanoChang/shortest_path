@@ -17,8 +17,11 @@ while PQ is not empty
 
 Path* shortestPath(Graph* graph, short row, short col, int start) {
     Path* path = buildPath();
-    PQ* pq = buildPriorityQueue(graph, row, col);
+    PQ* pq = buildPriorityQueue(graph, row, col, start);
     int pqSize = row*col;
+    // add the start node to the path
+    PQ s = extractMinPQ(pq, pqSize--);
+    addToPath(path, s);
     while(!reachedBottom(path, row)) {
         // after extracting the min, add the min to the path and update the pqsize
         PQ u = extractMinPQ(pq, pqSize--);
@@ -31,13 +34,15 @@ Path* shortestPath(Graph* graph, short row, short col, int start) {
     return path;
 }
 
-PQ* buildPriorityQueue(Graph* graph, short row, short col) {
+PQ* buildPriorityQueue(Graph* graph, short row, short col, int start) {
     PQ* pq = malloc(sizeof(PQ) * (row*col+1));
     for(int i = 0; i < row; i++) {
         for(int j = 0; j < col; j++) {
             graph->g[i][j].priority = i*col + j;
             pq[i*col+j].node = &graph->g[i][j];
             pq[i*col+j].time = -1;
+            // only if the node is start then set the time to 0
+            if(i == 0 && j == start) pq[i*col+j].time = 0;
             pq[i*col+j].pred = NULL;
         }
     }

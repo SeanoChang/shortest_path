@@ -28,7 +28,6 @@ Graph* readGraph(char* infile){
         graph->g[i] = malloc(sizeof(GraphNode)*col);
         for(int j = 0; j < col; j++){
             fread(&graph->g[i][j].time, sizeof(short), 1, fp);
-            printf("%hd ", graph->g[i][j].time);
             graph->g[i][j].row = i;
             graph->g[i][j].col = j;
         }

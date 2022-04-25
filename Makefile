@@ -18,10 +18,10 @@ test: $(EXEC)
 
 memory: $(EXEC)
 	mkdir moutputs
-	$(VALGRIND) ./$(EXEC) examples/4_5.b outputs/4_5.t outputs/4_5.f outputs/4_5.p
-	$(VALGRIND) ./$(EXEC) examples/5_4.b outputs/5_4.t outputs/5_4.f outputs/5_4.p
-	$(VALGRIND) ./$(EXEC) examples/5_5.b outputs/5_5.t outputs/5_5.f outputs/5_5.p
-	$(VALGRIND) ./$(EXEC) examples/7_7.b outputs/7_7.t outputs/7_7.f outputs/7_7.p
+	$(VALGRIND) ./$(EXEC) examples/4_5.b moutputs/4_5.t moutputs/4_5.f moutputs/4_5.p
+	$(VALGRIND) ./$(EXEC) examples/5_4.b moutputs/5_4.t moutputs/5_4.f moutputs/5_4.p
+	$(VALGRIND) ./$(EXEC) examples/5_5.b moutputs/5_5.t moutputs/5_5.f moutputs/5_5.p
+	$(VALGRIND) ./$(EXEC) examples/7_7.b moutputs/7_7.t moutputs/7_7.f moutputs/7_7.p
 
 clean: 
 	/bin/rm -f $(EXEC)
