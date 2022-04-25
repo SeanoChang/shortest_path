@@ -21,3 +21,13 @@ PathNode* buildPathNode(GraphNode* nd){
 
     return pnode;
 }
+
+void destroyPath(Path* p) {
+    PathNode* cur = p->front;
+    while(cur != NULL) {
+        PathNode* temp = cur;
+        cur = cur->next;
+        free(temp);
+    }
+    free(p);
+}

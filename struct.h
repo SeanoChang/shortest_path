@@ -35,5 +35,6 @@ typedef struct PQ {
 
 Path* buildPath();
 PathNode* buildPathNode(GraphNode*);
+void destroyPath(Path*);
 
 #endif

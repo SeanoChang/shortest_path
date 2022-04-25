@@ -3,12 +3,11 @@
 
 Path* shortestPath(Graph*, short, short, int);
 PQ* buildPriorityQueue(Graph*, short, short, int);
-int reachedBottom(Path*, short);
 PQ extractMinPQ(PQ*, int);
+short findEndNode(PQ*, Graph*, short, short);
+PathNode* buildShortestPath(PQ*, Graph*, PQ, short);
 void downwardHeapify(PQ*, int, int);
-int shouldHeapify(PQ, PQ, PQ);
-void addToPath(Path*, PQ);
 void relaxAdjencent(Graph*, PQ*, PQ, short, short, int);
-void relax(PQ*, PQ, PQ, int);
+void relax(PQ*, PQ*, PQ*, int);
 
 #endif
