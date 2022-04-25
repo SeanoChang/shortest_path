@@ -22,6 +22,17 @@ PathNode* buildPathNode(GraphNode* nd){
     return pnode;
 }
 
+void destroyGraph(Graph* graph){
+    for(int i = 0; i < graph->row; i++){
+        free(graph->g[i]);
+    }
+    free(graph->g);
+    free(graph);
+}
+
+/*
+destroy options of path but not the path with the fastest time of all paths
+*/
 void destroyPaths(Path** paths, short col, int fastest_idx) {
     for(int i = 0; i < col; i++){
         if(i != fastest_idx){

@@ -42,6 +42,9 @@ Path* shortestPath(Graph* graph, short row, short col, int start) {
     return path;
 }
 
+/*
+build the priority queue for maintaining the shortest path to each node
+*/
 PQ* buildPriorityQueue(Graph* graph, short row, short col, int start) {
     PQ* pq = malloc(sizeof(PQ) * (row*col+1));
     for(int i = 0; i < row; i++) {
@@ -183,6 +186,9 @@ void relax(PQ* pq, PQ* u, PQ* v, int max_size) {
     }
 }
 
+/*
+find the end node that has the shortest time to exit the graph
+*/
 short findEndNode(PQ* pq, Graph* graph, short row, short col){
     // the end node must be in the last row
     int fastest = pq[graph->g[row-1][0].priority].time + graph->g[row-1][0].time;
@@ -197,6 +203,11 @@ short findEndNode(PQ* pq, Graph* graph, short row, short col){
     return idx;
 }
 
+/*
+the function find the shortest path from the start node to the end node with the given end column index
+each PQ struct stores the predecessor of the node 
+find each node's predecessor and stack up the path to return
+*/
 PathNode* buildShortestPath(PQ* pq, Graph* graph, PQ startNode, short endColIdx) {
     short curRow = graph->row-1;
     short curCol = endColIdx;

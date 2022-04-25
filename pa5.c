@@ -11,15 +11,13 @@ int main(int argc, char** argv){
     }
 
     Graph* graph = readGraph(argv[1]);
-    short row = graph->row;
-    short col = graph->col;
 
-    if(writeOutput1(argv[2], graph, row, col)){
+    if(writeOutput1(argv[2], graph)){
         fprintf(stderr, "pa5.c Error writing output file 1\n");
         return EXIT_FAILURE;
     }
 
-    Path* fastestPath = writeOutput2(argv[3], graph, row, col);
+    Path* fastestPath = writeOutput2(argv[3], graph);
     
     if(fastestPath == NULL){
         fprintf(stderr, "pa5.c Error writing output file 2\n");

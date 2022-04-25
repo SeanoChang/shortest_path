@@ -10,12 +10,15 @@ Text grid file format:
 %hd %hd\n
 matrix of size row x col
 */
-int writeOutput1(char* outfile, Graph* graph, short row, short col){
+int writeOutput1(char* outfile, Graph* graph){
     FILE* fp = fopen(outfile, "w");
     if(fp == NULL){
-        fprintf(stderr, "write_output.c Error opening output file 1\n");
+        fprintf(stderr, "write_output.c 16 Error opening output file 1\n");
         return EXIT_FAILURE;
     }
+
+    short row = graph->row;
+    short col = graph->col;
 
     fprintf(fp, "%hd %hd\n", row, col);
     for(int i = 0; i < row; i++){
@@ -23,7 +26,10 @@ int writeOutput1(char* outfile, Graph* graph, short row, short col){
             fprintf(fp, "%hd", graph->g[i][j].time);
             if(j != col - 1) fprintf(fp, " ");
         }
-        fprintf(fp, "\n");
+        if(fprintf(fp, "\n") != 1){
+            fprintf(stderr, "write_output.c 30 Error writing output file 1\n");
+            return EXIT_FAILURE;
+        }
     }
     
     fclose(fp);
@@ -36,21 +42,35 @@ Fastest times file format:
 first store numbers of entrys -> number of columns as short
 then store the fastest times for each entry to exit at the bottom of the matrix -> as int
 */
-Path* writeOutput2(char* outfile, Graph* graph, short row, short col){
+Path* writeOutput2(char* outfile, Graph* graph){
     FILE* fp = fopen(outfile, "wb");
     if(fp == NULL){
-        fprintf(stderr, "write_output.c Error opening output file 2\n");
+        fprintf(stderr, "write_output.c 48 Error opening output file 2\n");
         return NULL;
     }
 
-    fwrite(&col, sizeof(short), 1, fp);
+    short row = graph->row;
+    short col = graph->col;
+    
+    // write the first number of entrys
+    if(fwrite(&col, sizeof(short), 1, fp) != 1){
+        fprintf(stderr, "write_output.c 57 Error writing output file 2\n");
+        return NULL;
+    }
+
+    // for storing the fastest time and fastest path
     int fastest_time = -1;
     int fastest_idx = 0;
     Path* fastestPath = NULL;
+
+    // for each entry, find the fastest time and path, then store the paths in a list
     Path** paths = malloc(sizeof(Path*)*col);
     for(int i = 0; i < col; i++){
         Path* p = shortestPath(graph, row, col, i);
-        fwrite(&p->time, sizeof(int), 1, fp);
+        if(fwrite(&p->time, sizeof(int), 1, fp) != 1){
+            fprintf(stderr, "write_output.c 71 Error writing output file 2\n");
+            return NULL;
+        }
         if(fastest_time == -1 || fastest_time > p->time){
             fastest_time = p->time;
             fastest_idx = i;
@@ -59,6 +79,7 @@ Path* writeOutput2(char* outfile, Graph* graph, short row, short col){
         paths[i] = p;
     }
 
+    // destroy the paths except the fastest one
     destroyPaths(paths, col, fastest_idx);
     fclose(fp);
     return fastestPath;
@@ -74,16 +95,28 @@ finally stor the (row,col) for each location in the path -> (short, short)
 int writeOutput3(char* outfile, Path* p){
     FILE* fp = fopen(outfile, "wb");
     if(fp == NULL){
-        fprintf(stderr, "write_output.c Error opening output file 3\n");
+        fprintf(stderr, "write_output.c 98 Error opening output file 3\n");
         return EXIT_FAILURE;
     }
 
-    fwrite(&p->time, sizeof(int), 1, fp);
-    fwrite(&p->size, sizeof(int), 1, fp);
+    if(fwrite(&p->time, sizeof(int), 1, fp) != 1){
+        fprintf(stderr, "write_output.c 103 Error writing output file 3\n");
+        return EXIT_FAILURE;
+    }
+    if(fwrite(&p->size, sizeof(int), 1, fp) != 1){
+        fprintf(stderr, "write_output.c 107 Error writing output file 3\n");
+        return EXIT_FAILURE;
+    }
     PathNode* temp = p->front;
     while(temp != NULL){
-        fwrite(&temp->node->row, sizeof(short), 1, fp);
-        fwrite(&temp->node->col, sizeof(short), 1, fp);
+        if(fwrite(&temp->node->row, sizeof(short), 1, fp) != 1){
+            fprintf(stderr, "write_output.c 113 Error writing output file 3\n");
+            return EXIT_FAILURE;
+        }
+        if(fwrite(&temp->node->col, sizeof(short), 1, fp) != 1){
+            fprintf(stderr, "write_output.c 117 Error writing output file 3\n");
+            return EXIT_FAILURE;
+        }
         temp = temp->next;
     }
     destroyPath(p);

@@ -35,11 +35,3 @@ Graph* readGraph(char* infile){
     fclose(fp);
     return graph;
 }
-
-void destroyGraph(Graph* graph){
-    for(int i = 0; i < graph->row; i++){
-        free(graph->g[i]);
-    }
-    free(graph->g);
-    free(graph);
-}

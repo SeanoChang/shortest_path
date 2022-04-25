@@ -3,6 +3,10 @@
 #include "struct.h"
 #include "helper.h"
 
+/*
+determine whether the priority queue needs to be heapified 
+if not, return 0 so that the heapify function can be skipped
+*/
 int shouldHeapify(PQ l, PQ r, PQ i) {
     // if both children are -1 then don't heapify
     if(l.time == -1 && r.time == -1) return 0;
@@ -17,23 +21,6 @@ int shouldHeapify(PQ l, PQ r, PQ i) {
         return 0;
     }
     return 1;
-}
-
-void addToPath(Path* path, PQ* u) {
-    if(path->front == NULL) {
-        path->front = buildPathNode(u->node);
-        path->rear = path->front;
-    } else {
-        if(isAdjencent(path->rear->node, u->node)) {
-            path->rear->next = buildPathNode(u->node);
-            path->rear = path->rear->next;
-        } else {
-            u->time = -1;
-            return;
-        }
-    }
-    path->size++;
-    path->time += u->node->time;
 }
 
 int isAdjencent(GraphNode* u, GraphNode* v) {
