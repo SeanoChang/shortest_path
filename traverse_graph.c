@@ -87,6 +87,7 @@ void downwardHeapify(PQ* pq, int i, int max_size) {
     int j = 2*i+1;
     PQ temp = pq[i];
     while(j <= max_size) {
+        printf("j: %d max_size: %d\n", j, max_size);
         if(j < max_size){
             if(j < max_size && pq[j].time != -1 && pq[j+1].time != -1) {
                 if(pq[j].time > pq[j+1].time) {
@@ -95,6 +96,7 @@ void downwardHeapify(PQ* pq, int i, int max_size) {
             } else if(j < max_size && pq[j+1].time != -1) {
                 j++;
             }
+            printf("i: %d j: %d max_size: %d\n", i, j, max_size);
             if(temp.time > pq[j].time) {
                 pq[i] = pq[j];
                 pq[i].node->priority = i;
@@ -103,7 +105,9 @@ void downwardHeapify(PQ* pq, int i, int max_size) {
             } else {
                 break;
             }
+            printf("i: %d j: %d max_size: %d\n", i, j, max_size);
         } else {
+            printf("!i: %d j: %d max_size: %d\n", i, j, max_size);
             if(pq[j].time != -1) {
                 if(temp.time > pq[j].time) {
                     pq[i] = pq[j];
@@ -113,11 +117,13 @@ void downwardHeapify(PQ* pq, int i, int max_size) {
                 } else {
                     break;
                 }
+                printf("?i: %d j: %d max_size: %d\n", i, j, max_size);
             } else {
                 break;
             }
         }
     }
+    printf("->i: %d j: %d max_size: %d\n", i, j, max_size);
     pq[i] = temp;
     pq[i].node->priority = i;
 }
