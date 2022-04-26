@@ -84,57 +84,42 @@ PQ extractMinPQ(PQ* pq, int max_size) {
 
 // downward heapify the PQ to maintain the min heap
 void downwardHeapify(PQ* pq, int i, int max_size) {
-    int l = 2*i;
-    int r = 2*i+1;
-    if(i == 0){
-        l = 1;
-        r = 2;
-        if(l < max_size && pq[l].time < pq[i].time) {
-            PQ temp = pq[l];
-            pq[l] = pq[i];
-            pq[i] = temp;
-            pq[l].node->priority = l;
-            pq[i].node->priority = i;
-            downwardHeapify(pq, l, max_size);
-        }
-    }
-    if(r < max_size && shouldHeapify(pq[l], pq[r], pq[i])) {
-        if(pq[l].time != -1) {
-            if(pq[r].time != -1) {
-                if(pq[l].time < pq[r].time) {
-                    PQ temp = pq[l];
-                    pq[l] = pq[i];
-                    pq[i] = temp;
-                    pq[i].node->priority = i;
-                    pq[l].node->priority = l;
-                    downwardHeapify(pq, l, max_size);  
-                } else {
-                    PQ temp = pq[r];
-                    pq[r] = pq[i];
-                    pq[i] = temp;
-                    pq[i].node->priority = i;
-                    pq[r].node->priority = r;
-                    downwardHeapify(pq, r, max_size);
-                }
-            } else {
-                PQ temp = pq[l];
-                pq[l] = pq[i];
-                pq[i] = temp;
+    int j = 2*i+1;
+    PQ temp = pq[i];
+    while(j <= max_size) {
+        if(j < max_size){
+            if(j < max_size && pq[j].time != -1 && pq[j+1].time != -1) {
+                if(pq[j].time > pq[j+1].time) {
+                    j++;
+                } 
+            } else if(pq[j+1].time != -1) {
+                j++;
+            }
+            if(temp.time > pq[j].time) {
+                pq[i] = pq[j];
                 pq[i].node->priority = i;
-                pq[l].node->priority = l;                
-                downwardHeapify(pq, l, max_size);
+                i = j;
+                j = 2*i+1;
+            } else {
+                break;
             }
         } else {
-            if(pq[r].time != -1) {
-                PQ temp = pq[r];
-                pq[r] = pq[i];
-                pq[i] = temp;
-                pq[i].node->priority = i;
-                pq[r].node->priority = r;
-                downwardHeapify(pq, r, max_size);
+            if(pq[j].time != -1) {
+                if(temp.time > pq[j].time) {
+                    pq[i] = pq[j];
+                    pq[i].node->priority = i;
+                    i = j;
+                    j = 2*i+1;
+                } else {
+                    break;
+                }
+            } else {
+                break;
             }
         }
     }
+    pq[i] = temp;
+    pq[i].node->priority = i;
 }
 
 /*

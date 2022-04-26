@@ -11,6 +11,11 @@ int main(int argc, char** argv){
     }
 
     Graph* graph = readGraph(argv[1]);
+    // if graph is null return EXIT_FAILURE -> invalid input file
+    if(graph == NULL){
+        fprintf(stderr,"pa5.c Error reading input file\n");
+        return EXIT_FAILURE;
+    }
 
     if(writeOutput1(argv[2], graph)){
         fprintf(stderr, "pa5.c Error writing output file 1\n");
@@ -18,7 +23,7 @@ int main(int argc, char** argv){
     }
 
     Path* fastestPath = writeOutput2(argv[3], graph);
-    
+    // if fastestPath is null return EXIT_FAILURE
     if(fastestPath == NULL){
         fprintf(stderr, "pa5.c Error writing output file 2\n");
         return EXIT_FAILURE;

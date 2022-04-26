@@ -21,6 +21,22 @@ $(EXEC): $(OBJS) $(HOBJS)
 	diff examples/7_7.t outputs/7_7.t
 	diff examples/7_7.f outputs/7_7.f
 
+100100: $(EXEC)
+	mkdir outputs
+	./$(EXEC) examples/100_100.b outputs/100_100.t outputs/100_100.f outputs/100_100.p
+
+5050: $(EXEC)
+	mkdir outputs
+	./$(EXEC) examples/50_50.b outputs/50_50.t outputs/50_50.f outputs/50_50.p
+
+6060: $(EXEC)
+	mkdir outputs
+	./$(EXEC) examples/60_60.b outputs/60_60.t outputs/60_60.f outputs/60_60.p
+
+10001000: $(EXEC)
+	mkdir outputs
+	./$(EXEC) examples/1000_1000.b outputs/1000_1000.t outputs/1000_1000.f outputs/1000_1000.p
+
 test: $(EXEC)
 	mkdir outputs
 	./$(EXEC) examples/4_5.b outputs/4_5.t outputs/4_5.f outputs/4_5.p
