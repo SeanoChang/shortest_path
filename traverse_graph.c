@@ -92,7 +92,7 @@ void downwardHeapify(PQ* pq, int i, int max_size) {
                 if(pq[j].time > pq[j+1].time) {
                     j++;
                 } 
-            } else if(pq[j+1].time != -1) {
+            } else if(j < max_size && pq[j+1].time != -1) {
                 j++;
             }
             if(temp.time > pq[j].time) {
