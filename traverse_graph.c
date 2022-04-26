@@ -84,46 +84,25 @@ PQ extractMinPQ(PQ* pq, int max_size) {
 
 // downward heapify the PQ to maintain the min heap
 void downwardHeapify(PQ* pq, int i, int max_size) {
+    int max = max_size - 1;
     int j = 2*i+1;
     PQ temp = pq[i];
-    while(j <= max_size) {
-        printf("j: %d max_size: %d\n", j, max_size);
-        if(j < max_size){
-            if(j < max_size && pq[j].time != -1 && pq[j+1].time != -1) {
-                if(pq[j].time > pq[j+1].time) {
-                    j++;
-                } 
-            } else if(j < max_size && pq[j+1].time != -1) {
+    while(j <= max) {
+        if(j < max){
+            if(pq[j].time != -1 && pq[j+1].time != -1){
+                if(pq[j].time > pq[j+1].time) j++;
+            } else if(pq[j].time == -1) {
                 j++;
             }
-            printf("i: %d j: %d max_size: %d\n", i, j, max_size);
-            if(temp.time > pq[j].time) {
-                pq[i] = pq[j];
-                pq[i].node->priority = i;
-                i = j;
-                j = 2*i+1;
-            } else {
-                break;
-            }
-            printf("i: %d j: %d max_size: %d\n", i, j, max_size);
-        } else {
-            printf("!i: %d j: %d max_size: %d\n", i, j, max_size);
-            if(pq[j].time != -1) {
-                if(temp.time > pq[j].time) {
-                    pq[i] = pq[j];
-                    pq[i].node->priority = i;
-                    i = j;
-                    j = 2*i+1;
-                } else {
-                    break;
-                }
-                printf("?i: %d j: %d max_size: %d\n", i, j, max_size);
-            } else {
-                break;
-            }
+        }
+        if(temp.time != -1 && temp.time <= pq[j].time) break;
+        else {
+            pq[i] = pq[j];
+            pq[i].node->priority = i;
+            i = j;
+            j = 2*i+1;
         }
     }
-    printf("->i: %d j: %d max_size: %d\n", i, j, max_size);
     pq[i] = temp;
     pq[i].node->priority = i;
 }
