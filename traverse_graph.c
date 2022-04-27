@@ -17,7 +17,6 @@ while PQ is not empty
 */
 
 Path** shortestPaths(Graph* graph, short row, short col) {
-    Path* path = buildPath();
     PQ* pq = buildPriorityQueue(graph, row, col);
     int pqSize = row*col;
     PQ s = pq[0];
@@ -31,15 +30,6 @@ Path** shortestPaths(Graph* graph, short row, short col) {
     for(int i = 0; i < col; i++) {
         paths[i] = buildShortestPath(pq, graph, s, i);
     }
-
-    PathNode* temp = path->rear;
-    while(temp->next != NULL) {
-        path->time += temp->node->time;
-        path->size++;
-        temp = temp->next;
-    }
-    path->time += temp->node->time;
-    path->size++;
 
     free(pq);
     return paths;

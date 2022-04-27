@@ -3,7 +3,7 @@
 #include "struct.h"
 
 Path* buildPath(){
-    Path* path = (Path*)malloc(sizeof(Path));
+    Path* path = malloc(sizeof(Path));
 
     path->time = 0;
     path->size = 0;
