@@ -33,6 +33,22 @@ $(EXEC): $(OBJS) $(HOBJS)
 	mkdir outputs
 	./$(EXEC) examples/60_60.b outputs/60_60.t outputs/60_60.f outputs/60_60.p
 
+200200: $(EXEC)
+	mkdir outputs
+	./$(EXEC) examples/200_200.b outputs/200_200.t outputs/200_200.f outputs/200_200.p
+
+250250: $(EXEC)
+	mkdir outputs
+	./$(EXEC) examples/250_250.b outputs/250_250.t outputs/250_250.f outputs/250_250.p
+
+500500: $(EXEC)
+	mkdir outputs
+	./$(EXEC) examples/500_500.b outputs/500_500.t outputs/500_500.f outputs/500_500.p
+
+750750: $(EXEC)
+	mkdir outputs
+	./$(EXEC) examples/750_750.b outputs/750_750.t outputs/750_750.f outputs/750_750.p
+
 10001000: $(EXEC)
 	mkdir outputs
 	./$(EXEC) examples/1000_1000.b outputs/1000_1000.t outputs/1000_1000.f outputs/1000_1000.p

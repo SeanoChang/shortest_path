@@ -64,21 +64,14 @@ Path* writeOutput2(char* outfile, Graph* graph){
     Path* fastestPath = NULL;
 
     // for each entry, find the fastest time and path, then store the paths in a list
-    Path** paths = malloc(sizeof(Path*)*col);
+    Path** paths = shortestPaths(graph, row, col);
     for(int i = 0; i < col; i++){
-        Path* p = shortestPath(graph, row, col, i);
-        if(fwrite(&p->time, sizeof(int), 1, fp) != 1){
-            fprintf(stderr, "write_output.c 71 Error writing output file 2\n");
-            return NULL;
-        }
-        if(fastest_time == -1 || fastest_time > p->time){
-            fastest_time = p->time;
+        int time = paths[i]->time;
+        if(time > fastest_time){
+            fastest_time = time;
             fastest_idx = i;
-            fastestPath = p;
         }
-        paths[i] = p;
     }
-
     // destroy the paths except the fastest one
     destroyPaths(paths, col, fastest_idx);
     fclose(fp);

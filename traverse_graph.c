@@ -16,9 +16,9 @@ while PQ is not empty
         relax(u, v, w(u, v))
 */
 
-Path* shortestPath(Graph* graph, short row, short col, int start) {
+Path** shortestPaths(Graph* graph, short row, short col) {
     Path* path = buildPath();
-    PQ* pq = buildPriorityQueue(graph, row, col, start);
+    PQ* pq = buildPriorityQueue(graph, row, col);
     int pqSize = row*col;
     PQ s = pq[0];
     while(pqSize > 0) { // update all the nodes in the graph to the shortest time to reach from start node
@@ -27,9 +27,11 @@ Path* shortestPath(Graph* graph, short row, short col, int start) {
         // relax all four directions if possible
         relaxAdjencent(graph, pq, u, row, col, pqSize);
     }
-    short endColIdx = findEndNode(pq, graph, row, col);
-    path->front = buildShortestPath(pq, graph, s, endColIdx);
-    path->rear = path->front;
+    Path** paths = malloc(sizeof(Path*)*col);
+    for(int i = 0; i < col; i++) {
+        paths[i] = buildShortestPath(pq, graph, s, i);
+    }
+
     PathNode* temp = path->rear;
     while(temp->next != NULL) {
         path->time += temp->node->time;
@@ -40,27 +42,27 @@ Path* shortestPath(Graph* graph, short row, short col, int start) {
     path->size++;
 
     free(pq);
-    return path;
+    return paths;
 }
 
 /*
 build the priority queue for maintaining the shortest path to each node
 */
-PQ* buildPriorityQueue(Graph* graph, short row, short col, int start) {
+PQ* buildPriorityQueue(Graph* graph, short row, short col) {
     PQ* pq = malloc(sizeof(PQ) * (row*col+1));
     for(int i = 0; i < row; i++) {
         for(int j = 0; j < col; j++) {
             graph->g[i][j].priority = i*col + j;
             pq[i*col+j].node = &graph->g[i][j];
             pq[i*col+j].time = -1;
-            // only if the node is start then set the time to 0
-            if(i == 0 && j == start) pq[i*col+j].time = 0;
+            // initialize the last row to zeros
+            if(i == row-1) pq[i*col+j].time = 0;
             pq[i*col+j].pred = NULL;
         }
     }
 
     // create the min heap
-    for(int i = row*col/2; i >= 0; i--) {
+    for(int i = col; i >= 0; i--) {
         downwardHeapify(pq, i, row*col);
     }
 
@@ -86,25 +88,37 @@ PQ extractMinPQ(PQ* pq, int max_size) {
 void downwardHeapify(PQ* pq, int i, int max_size) {
     int max = max_size - 1;
     int j = 2*i+1;
-    PQ temp = pq[i];
     while(j <= max) {
-        if(j < max){
-            if(pq[j].time != -1 && pq[j+1].time != -1){
+        if(j < max) {
+            if(pq[j].time == -1 && pq[j+1].time == -1) break;
+            if(pq[j].time != -1 && pq[j+1].time != -1) {
                 if(pq[j].time > pq[j+1].time) j++;
             } else if(pq[j].time == -1) {
                 j++;
-            }
+            } 
         }
-        if(temp.time != -1 && temp.time <= pq[j].time) break;
-        else {
-            pq[i] = pq[j];
+        if(pq[i].time != -1) {
+            if(pq[j].time < pq[i].time){
+                PQ temp = pq[j];
+                pq[j] = pq[i];
+                pq[i] = temp;
+                pq[i].node->priority = i;
+                pq[j].node->priority = j;
+                i = j;
+                j = 2*i+1;
+            } else {
+                break;
+            }
+        } else {
+            PQ temp = pq[j];
+            pq[j] = pq[i];
+            pq[i] = temp;
             pq[i].node->priority = i;
+            pq[j].node->priority = j;
             i = j;
             j = 2*i+1;
         }
     }
-    pq[i] = temp;
-    pq[i].node->priority = i;
 }
 
 /*
@@ -123,14 +137,16 @@ void relaxAdjencent(Graph* graph, PQ* pq, PQ u, short row, short col, int max_si
     // relax to the right
     if(u.node->col+1 < col) {
         int loc = graph->g[u.node->row][u.node->col+1].priority;
-        if(loc < max_size){
+        // if the right is also last row, dont relax
+        if(loc < max_size && pq[loc].node->row != row-1) {
             relax(pq, &u, &pq[loc], max_size); 
         } 
     }
     // relax to the left
     if(u.node->col-1 >= 0) {
         int loc = graph->g[u.node->row][u.node->col-1].priority;
-        if(loc < max_size){    
+        // if the left is also last row, dont relax
+        if(loc < max_size && pq[loc].node->row != row-1){    
             relax(pq, &u, &pq[loc], max_size);
         }
     }
@@ -152,7 +168,7 @@ void relax(PQ* pq, PQ* u, PQ* v, int max_size) {
         v->pred = u->node;
     }
 
-    for(int i = max_size/2; i >= 0; i--) {
+    for(int i = v->node->priority+1; i >= 0; i--) {
         downwardHeapify(pq, i, max_size);
     }
 }
@@ -179,22 +195,25 @@ the function find the shortest path from the start node to the end node with the
 each PQ struct stores the predecessor of the node 
 find each node's predecessor and stack up the path to return
 */
-PathNode* buildShortestPath(PQ* pq, Graph* graph, PQ startNode, short endColIdx) {
-    short curRow = graph->row-1;
+Path* buildShortestPath(PQ* pq, Graph* graph, PQ startNode, short endColIdx) {
+    short curRow = 0;
     short curCol = endColIdx;
-    PathNode** head = malloc(sizeof(PathNode*));
-    *head = buildPathNode(&graph->g[graph->row-1][endColIdx]);
+    Path* path = buildPath();
+    path->front = buildPathNode(pq[graph->g[curRow][curCol].priority].pred);
+    path->rear = path->front;
+    path->time += path->front->node->time;
+    path->size += 1;
 
-    while(curRow != startNode.node->row || curCol != startNode.node->col) {
+    while(curRow != graph->row-1) {
         short tmpRow = curRow;
         curRow = pq[graph->g[curRow][curCol].priority].pred->row;
         curCol = pq[graph->g[tmpRow][curCol].priority].pred->col;
-        PathNode* temp = buildPathNode(pq[(*head)->node->priority].pred);
-        temp->next = *head;
-        *head = temp;
+        PathNode* temp = buildPathNode(pq[path->front->node->priority].pred);
+        path->rear->next = temp;
+        path->rear = temp;
+        path->time += temp->node->time;
+        path->size += 1;
     }
 
-    PathNode* dummy = *head;
-    free(head);
-    return dummy;
+    return path;
 }
