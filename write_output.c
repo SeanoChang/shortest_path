@@ -67,8 +67,13 @@ Path* writeOutput2(char* outfile, Graph* graph){
     Path** paths = shortestPaths(graph, row, col);
     for(int i = 0; i < col; i++){
         int time = paths[i]->time;
+        if(fwrite(&paths[i]->time, sizeof(int), 1, fp) != 1){
+            fprintf(stderr, "write_output.c 71 Error writing output file 2\n");
+            return NULL;
+        }
         if(time > fastest_time){
             fastest_time = time;
+            fastestPath = paths[i];
             fastest_idx = i;
         }
     }
@@ -88,26 +93,26 @@ finally stor the (row,col) for each location in the path -> (short, short)
 int writeOutput3(char* outfile, Path* p){
     FILE* fp = fopen(outfile, "wb");
     if(fp == NULL){
-        fprintf(stderr, "write_output.c 98 Error opening output file 3\n");
+        fprintf(stderr, "write_output.c 96 Error opening output file 3\n");
         return EXIT_FAILURE;
     }
 
     if(fwrite(&p->time, sizeof(int), 1, fp) != 1){
-        fprintf(stderr, "write_output.c 103 Error writing output file 3\n");
+        fprintf(stderr, "write_output.c 101 Error writing output file 3\n");
         return EXIT_FAILURE;
     }
     if(fwrite(&p->size, sizeof(int), 1, fp) != 1){
-        fprintf(stderr, "write_output.c 107 Error writing output file 3\n");
+        fprintf(stderr, "write_output.c 105 Error writing output file 3\n");
         return EXIT_FAILURE;
     }
     PathNode* temp = p->front;
     while(temp != NULL){
         if(fwrite(&temp->node->row, sizeof(short), 1, fp) != 1){
-            fprintf(stderr, "write_output.c 113 Error writing output file 3\n");
+            fprintf(stderr, "write_output.c 111 Error writing output file 3\n");
             return EXIT_FAILURE;
         }
         if(fwrite(&temp->node->col, sizeof(short), 1, fp) != 1){
-            fprintf(stderr, "write_output.c 117 Error writing output file 3\n");
+            fprintf(stderr, "write_output.c 115 Error writing output file 3\n");
             return EXIT_FAILURE;
         }
         temp = temp->next;
