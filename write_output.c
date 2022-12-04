@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include "struct.h"
 #include "traverse_graph.h"
 #include "write_output.h"
@@ -59,7 +60,7 @@ Path* writeOutput2(char* outfile, Graph* graph){
     }
 
     // for storing the fastest time and fastest path
-    int fastest_time = -1;
+    int fastest_time = INT_MAX;
     int fastest_idx = 0;
     Path* fastestPath = NULL;
 
@@ -71,7 +72,7 @@ Path* writeOutput2(char* outfile, Graph* graph){
             fprintf(stderr, "write_output.c 71 Error writing output file 2\n");
             return NULL;
         }
-        if(time > fastest_time){
+        if(time < fastest_time){
             fastest_time = time;
             fastestPath = paths[i];
             fastest_idx = i;
@@ -118,7 +119,6 @@ int writeOutput3(char* outfile, Path* p){
         temp = temp->next;
     }
     destroyPath(p);
-
     fclose(fp);
     return EXIT_SUCCESS;
 }
